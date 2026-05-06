@@ -18,17 +18,6 @@ app.get('/tasks', (req, res) => {
   res.status(200).json(tasks);
 });
 
-// GET task by ID
-app.get('/tasks/:id', (req, res) => {
-  const task = tasks.find((t) => t.id == req.params.id);
-
-  if (!task) {
-    return res.status(404).json({ message: 'Task not found' });
-  }
-
-  res.status(200).json(task);
-});
-
 // GET tasks by subject
 app.get('/tasks/subject/:subject', (req, res) => {
   const filtered = tasks.filter(
@@ -46,6 +35,17 @@ app.get('/tasks/status/completed', (req, res) => {
 // GET pending tasks
 app.get('/tasks/status/pending', (req, res) => {
   res.status(200).json(tasks.filter((t) => !t.completed));
+});
+
+// GET task by ID
+app.get('/tasks/:id', (req, res) => {
+  const task = tasks.find((t) => t.id == req.params.id);
+
+  if (!task) {
+    return res.status(404).json({ message: 'Task not found' });
+  }
+
+  res.status(200).json(task);
 });
 
 // GET statistics
