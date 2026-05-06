@@ -127,6 +127,7 @@ app.get('/health', (req, res) => {
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
+    message: "Study Plan API is Running"
   });
 });
 
