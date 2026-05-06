@@ -13,42 +13,30 @@ const PORT = process.env.PORT || 3000;
    REST API ENDPOINTS
 ============================= */
 
-// GET all tasks
+// ✅ GET all tasks
 app.get('/tasks', (req, res) => {
   res.status(200).json(tasks);
 });
 
-// GET tasks by subject
+// ✅ GET tasks by subject
 app.get('/tasks/subject/:subject', (req, res) => {
   const filtered = tasks.filter(
     (t) => t.subject.toLowerCase() === req.params.subject.toLowerCase()
   );
-
   res.status(200).json(filtered);
 });
 
-// GET completed tasks
+// ✅ GET completed tasks
 app.get('/tasks/status/completed', (req, res) => {
   res.status(200).json(tasks.filter((t) => t.completed));
 });
 
-// GET pending tasks
+// ✅ GET pending tasks
 app.get('/tasks/status/pending', (req, res) => {
   res.status(200).json(tasks.filter((t) => !t.completed));
 });
 
-// GET task by ID
-app.get('/tasks/:id', (req, res) => {
-  const task = tasks.find((t) => t.id == req.params.id);
-
-  if (!task) {
-    return res.status(404).json({ message: 'Task not found' });
-  }
-
-  res.status(200).json(task);
-});
-
-// GET statistics
+// ✅ GET statistics (MUST COME BEFORE :id)
 app.get('/tasks/stats', (req, res) => {
   const total = tasks.length;
   const completed = tasks.filter((t) => t.completed).length;
@@ -61,7 +49,7 @@ app.get('/tasks/stats', (req, res) => {
   });
 });
 
-// GET random task
+// ✅ GET random task (MUST COME BEFORE :id)
 app.get('/tasks/random', (req, res) => {
   if (tasks.length === 0) {
     return res.status(404).json({ message: 'No tasks available' });
@@ -71,7 +59,18 @@ app.get('/tasks/random', (req, res) => {
   res.status(200).json(random);
 });
 
-// POST create task
+// ✅ GET task by ID (MOVE THIS AFTER ALL SPECIFIC ROUTES)
+app.get('/tasks/:id', (req, res) => {
+  const task = tasks.find((t) => t.id == req.params.id);
+
+  if (!task) {
+    return res.status(404).json({ message: 'Task not found' });
+  }
+
+  res.status(200).json(task);
+});
+
+// ✅ POST create task
 app.post('/tasks', (req, res) => {
   const { subject, title, deadline } = req.body;
 
@@ -91,7 +90,7 @@ app.post('/tasks', (req, res) => {
   res.status(201).json(newTask);
 });
 
-// PUT update task
+// ✅ PUT update task
 app.put('/tasks/:id', (req, res) => {
   const task = tasks.find((t) => t.id == req.params.id);
 
@@ -109,7 +108,7 @@ app.put('/tasks/:id', (req, res) => {
   res.status(200).json(task);
 });
 
-// DELETE task
+// ✅ DELETE task
 app.delete('/tasks/:id', (req, res) => {
   const index = tasks.findIndex((t) => t.id == req.params.id);
 
@@ -121,7 +120,7 @@ app.delete('/tasks/:id', (req, res) => {
   res.status(200).json({ message: 'Task deleted successfully' });
 });
 
-// GET health check
+// ✅ Health check
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -131,12 +130,12 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 handler (MUST BE LAST)
+// ✅ 404 handler (MUST BE LAST)
 app.use((req, res) => {
   res.status(404).send("Backend Running " + req.originalUrl);
 });
 
-// Start server
+// ✅ Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
