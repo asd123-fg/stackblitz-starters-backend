@@ -1,20 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 
 const app = express();
 let tasks = require('./data');
 
 app.use(cors());
 app.use(express.json());
-
-// ✅ Serve frontend folder
-app.use(express.static(path.join(__dirname, 'frontend')));
-
-// ✅ Root route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
-});
 
 const PORT = process.env.PORT || 3000;
 
@@ -130,7 +121,21 @@ app.delete('/tasks/:id', (req, res) => {
   res.status(200).json({ message: 'Task deleted successfully' });
 });
 
-// ✅ Start server
+// GET health check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// 404 handler (MUST BE LAST)
+app.use((req, res) => {
+  res.status(404).send("Backend Running " + req.originalUrl);
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
